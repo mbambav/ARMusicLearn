@@ -19,27 +19,27 @@ Music education traditionally requires access to physical instruments and one-on
 
 ## Key Features
 
-### ◈ Instrument Mapping via AR
+### Instrument Mapping via AR
 - Detects and maps piano keys or guitar fretboards using computer vision
 - Aligns digital overlays accurately onto the physical instrument surface
 
-### ◉ Real-Time Note Highlighting
+### Real-Time Note Highlighting
 - Highlights specific piano keys or guitar strings to indicate which notes to play
 - Provides sequential visual prompts during song practice
 
-### ◫ Hand Placement Visualization
+### Hand Placement Visualization
 - Displays correct finger positioning for both hands
 - Indicates which finger should press which key or string
 
-### ▶ Interactive Song Mode
+### Interactive Song Mode
 - Guides users step-by-step through beginner songs
 - Adjustable difficulty levels and tempo control
 
-### ◎ Performance Feedback
+### Performance Feedback
 - Detects played notes via microphone or MIDI input
 - Provides real-time correctness feedback and accuracy scoring
 
-### ⊞ Modular Software Architecture
+### Modular Software Architecture
 - Designed for expansion to additional instruments in the future
 
 ---
