@@ -37,18 +37,35 @@ def detect_edges(image):
     edges = cv2.Canny(image, low, high)
     return edges
 
-def keyboard_region(image):
-    row_sum = np.sum(image, axis=1)
-    plt.plot(row_sum)
-    plt.show()
-    return image
+def keyboard_region(edges, original):
+    row_sum = np.sum(edges, axis=1)
+    mean_val = np.mean(row_sum)
+    
+    rows_above_threshold = np.where(row_sum > mean_val*25)[0]
+    
+    y1 = int(rows_above_threshold[0])
+    y2 = int(rows_above_threshold[-1])
+    width = original.shape[1]
+    print(f"mean: {mean_val}")
+    print(f"max: {np.max(row_sum)}")
+    print(f"min: {np.min(row_sum)}")
+    print(f"y1: {y1}, y2: {y2}")
+    
+    cv2.rectangle(original, (0, y1), (width, y2), (0, 255, 0), 2)
+    cv2.imshow("keyboard region", original)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
+    # return the cropped region for next step
+    cropped = original[y1:y2, :]
+    return cropped
 
 if __name__ == "__main__":
     image = load_image("/Users/arnavgoyal/Documents/GitHub/ARMusicLearn/testImages/brown_piano.png")
     preprocessed = preprocess(image)
     mask = colour_mask(preprocessed)
     edges = detect_edges(mask)
-    region = keyboard_region(edges)
+    region = keyboard_region(edges,preprocessed)
     cv2.imshow("edges", edges)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
