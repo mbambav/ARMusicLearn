@@ -39,33 +39,52 @@ def detect_edges(image):
 
 def keyboard_region(edges, original):
     row_sum = np.sum(edges, axis=1)
-    mean_val = np.mean(row_sum)
+    threshold = np.mean(row_sum)
     
-    rows_above_threshold = np.where(row_sum > mean_val*25)[0]
+    while True:
+        rows_above_threshold = np.where(row_sum > threshold)[0]
+        
+        if len(rows_above_threshold) == 0:
+            break
+            
+        y1 = int(rows_above_threshold[0])
+        y2 = int(rows_above_threshold[-1])
+        region_height = y2 - y1
+        
+        # stop when region is small enough to just be the keys
+        if region_height < original.shape[0] * 0.3:
+            break
+            
+        threshold = np.mean(row_sum[rows_above_threshold])
     
-    y1 = int(rows_above_threshold[0])
-    y2 = int(rows_above_threshold[-1])
     width = original.shape[1]
-    print(f"mean: {mean_val}")
-    print(f"max: {np.max(row_sum)}")
-    print(f"min: {np.min(row_sum)}")
-    print(f"y1: {y1}, y2: {y2}")
-    
     cv2.rectangle(original, (0, y1), (width, y2), (0, 255, 0), 2)
-    cv2.imshow("keyboard region", original)
+    cv2.imwrite("debug_rectangle.png", original)
+    
+    cropped = original[y1:y2, :]
+    cv2.imshow("cropped", cropped)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    
-    # return the cropped region for next step
-    cropped = original[y1:y2, :]
     return cropped
+
 
 if __name__ == "__main__":
     image = load_image("/Users/arnavgoyal/Documents/GitHub/ARMusicLearn/testImages/brown_piano.png")
     preprocessed = preprocess(image)
     mask = colour_mask(preprocessed)
     edges = detect_edges(mask)
-    region = keyboard_region(edges,preprocessed)
-    cv2.imshow("edges", edges)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    keyboard = keyboard_region(edges, preprocessed)
+    
+    # temporary FFT test - pick a row in the middle of the image
+    test_row = keyboard.shape[0] // 2
+    slice = preprocessed[test_row, :, 0]
+    fft = np.fft.fft(slice)
+    magnitude = np.abs(fft)
+    freqs = np.fft.fftfreq(len(slice))
+
+    # only plot positive frequencies
+    positive = freqs > 0
+    plt.plot(freqs[positive], magnitude[positive])
+    plt.xlabel("frequency")
+    plt.ylabel("magnitude")
+    plt.show()
