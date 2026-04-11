@@ -28,6 +28,9 @@ def colour_mask(image):
     black_mask = cv2.inRange(hsv, lower_black, upper_black)
     # combine both masks
     combined_mask = cv2.bitwise_or(white_mask, black_mask)
+    cv2.imshow("combined_mask", combined_mask)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return combined_mask
 
 def detect_edges(image):
@@ -35,6 +38,9 @@ def detect_edges(image):
     low = median * 0.66
     high = median * 1.33
     edges = cv2.Canny(image, low, high)
+    cv2.imshow("edges", edges)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return edges
 
 def keyboard_region(edges, original):
@@ -66,6 +72,8 @@ def keyboard_region(edges, original):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     return cropped
+
+
 
 
 if __name__ == "__main__":
