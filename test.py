@@ -71,10 +71,14 @@ def keyboard_region(edges, original):
     cv2.imshow("cropped", cropped)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+    column_sum =np.sum(cropped, axis=0)
+    plt.plot(column_sum)
+    plt.xlabel("column")
+    plt.ylabel("sum of pixel values")
+    plt.title("Column Sum of Cropped Keyboard Region")
+    plt.show()
     return cropped
-
-
-
 
 if __name__ == "__main__":
     image = load_image("/Users/arnavgoyal/Documents/GitHub/ARMusicLearn/testImages/brown_piano.png")
